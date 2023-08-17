@@ -153,7 +153,7 @@ public class Assignment2{
 
                     /////////////////////////Stored in 2D ARRAY//////////////////////////////////////////////
 
-                     // new array (old+1 member) --
+                     // new array (old+1 member)
 
                     String [][] newAccounts = new String[accounts.length+1][3];
                     
