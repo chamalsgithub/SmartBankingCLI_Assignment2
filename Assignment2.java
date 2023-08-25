@@ -94,12 +94,13 @@ public class Assignment2{
                         name = SCANNER.nextLine().strip();
 
                         
+                        
 
-                        if (name.isBlank()){  //Check whether the name is empty
+                       if (name.isBlank()){  //Check whether the name is empty
                             System.out.printf(ERROR_MSG, "Name can't be empty");
                             valid = false;
                             continue loop1;
-                        }
+                        } 
 
                         for (int i = 0; i < name.length(); i++) { // check A-Z a-z spaces invalidity
                             if (!(Character.isLetter(name.charAt(i)) || 
@@ -111,21 +112,8 @@ public class Assignment2{
 
                         }
                         
-                        loop2: 
-                        do { // Get initial deposit and store in temp var.
-                            System.out.print("\tInitial Deposit : ");
-                            balance = SCANNER.nextDouble();
-                            SCANNER.nextLine();
-                            valid=true;
-
-
-                            if (balance<5000){  //Check whether the initial Deposit is higher than 5000/= 
-                                System.out.printf(ERROR_MSG, "Insufficient initial deposit"); 
-                                valid = false;
-                                continue loop2;
-                            }
-                            
-                        } while (!valid);
+                       
+                         balance = checkMin(5000, "\tInitial Deposit : ", "Insufficient initial deposit");
 
                     /* ///// Save acc holder id from temp var. to accId Array
                     String[] newAccId= new String[accId.length + 1];
@@ -207,5 +195,28 @@ public class Assignment2{
 
 
         } while (true);
+
+       
+
+
     }
-}
+
+      public static double checkMin(double amountBoundary, String inputText, String ERROR_MSG){
+            double amount ;
+            boolean validity = false;
+
+            do{
+            System.out.printf(inputText);
+             amount = SCANNER.nextInt();
+            SCANNER.nextLine();
+
+                if (amount<amountBoundary){  
+                    System.out.printf(ERROR_MSG+"\n");
+                    validity=true;
+                }
+               
+            }while(validity) ;  
+            
+            return amount;
+        }
+    }
