@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Assignment2{
@@ -11,7 +10,7 @@ public class Assignment2{
         final String COLOR_GREEN_BOLD = "\033[33;1m";
         final String RESET = "\033[0m";
 
-        final String ERROR_MSG = String.format("\t%s%s%s\n", COLOR_RED_BOLD, "%s", RESET);
+        final  String ERROR_MSG = String.format("\t%s%s%s\n", COLOR_RED_BOLD, "%s", RESET);
         final String SUCCESS_MSG = String.format("\t%s%s%s\n", COLOR_GREEN_BOLD, "%s", RESET);
 
         final String DASHBOARD = "\u25B6 \u25B9 Welcome to Smart Banking \u25B9 \u25B6    ";
@@ -77,75 +76,16 @@ public class Assignment2{
                     String id;
                     String name;
                     double balance=0; 
-                    
-                      
-            
-                    
-                    loop1: 
                     do{
+                    int size = accounts.length;
+                    id = generateAutoId(size);
 
-                        // Generate auto ID & store in temp var.
-                        id = String.format("SDB-%05d", (idLast + 1));
-                        System.out.print("\tID :"+id+ "\n");
-
-                        // Get name and store in temp var.
-                        valid = true;
-                        System.out.print("\tName: ");
-                        name = SCANNER.nextLine().strip();
-
-                        
-                        
-
-                       if (name.isBlank()){  //Check whether the name is empty
-                            System.out.printf(ERROR_MSG, "Name can't be empty");
-                            valid = false;
-                            continue loop1;
-                        } 
-
-                        for (int i = 0; i < name.length(); i++) { // check A-Z a-z spaces invalidity
-                            if (!(Character.isLetter(name.charAt(i)) || 
-                                Character.isSpaceChar(name.charAt(i))) ) {
-                                System.out.printf(ERROR_MSG, "Invalid Name");
-                                valid = false;
-                                continue loop1;
-                            }
-
-                        }
-                        
-                       
-                         balance = checkMin(5000, "\tInitial Deposit : ", "Insufficient initial deposit");
-
-                    /* ///// Save acc holder id from temp var. to accId Array
-                    String[] newAccId= new String[accId.length + 1];
-                    for (int i = 0; i < accId.length; i++) {
-                        newAccId[i] = accId[i];
-                    }
-                    newAccId[newAccId.length -1] = id;
-                    accId = newAccId;
-
-                    ///// Save acc holder name from temp var. to accHolders Array
-                    String[] newAccHolders = new String[accHolders.length + 1];
-                    for (int i = 0; i < accHolders.length; i++) {
-                        newAccHolders[i] = accHolders[i];
-                    }
-                    newAccHolders[newAccHolders.length -1] = name;
-                    accHolders = newAccHolders;
-
-                    ///// Save acc holder's initial deposit amount from temp var. to accBal Array
-                    double [] newAccBal = new double[accBal.length + 1];
-                    for (int i = 0; i < accBal.length; i++) {
-                        newAccBal[i] = accBal[i];
-                    }
-                    newAccBal[newAccBal.length -1] = balance;
-                    accBal = newAccBal; */
-
-                    /////////////////////////Stored in 2D ARRAY//////////////////////////////////////////////
-
-                     // new array (old+1 member)
+                    name = getValidatedTextInput("Name" ,ERROR_MSG);
+                    
+                    balance = checkMin(5000, "\tInitial Deposit : ", "Insufficient initial deposit");
 
                     String [][] newAccounts = new String[accounts.length+1][3];
-                    
-                    //copy from old array to new array
+
                     for (int i = 0; i < accounts.length; i++) {
                         
                         newAccounts[i]=accounts[i];
@@ -155,27 +95,26 @@ public class Assignment2{
                     newAccounts[newAccounts.length-1][1]=name;
                     newAccounts[newAccounts.length-1][2]=balance+"";
 
-                    //Assign new Array adress to "accounts" 
                     accounts=newAccounts;
 
-                    //System.out.println(Arrays.toString(accounts[0]));
-
-                    /////////////////////////Stored in 2D ARRAY//////////////////////////////////////////////
-
-                    idLast++;
                     //Re-enter or Return to the dashboard
                     System.out.println();
                     System.out.printf("\tID: %s %s has been created successfully.\n\tDo you want to add another (Y/n)? ", id,name);
-                    if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
-                    screen = DASHBOARD;
-                        
-                                                
+                    if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) {
+                        continue;
+                    }else{
+                        valid = true;
+                        screen = DASHBOARD;
+                    }
+
                     }while(!valid);
                     
                     break;
                 
                 //Deposit        
                 case DEPOSITS :
+
+
 
                 //Withdrawals       
                 case WITHDRAWALS :
@@ -201,9 +140,50 @@ public class Assignment2{
 
     }
 
-      public static double checkMin(double amountBoundary, String inputText, String ERROR_MSG){
+     static String getValidatedTextInput(String input, String ERROR_MSG) {
+        boolean valid = false;
+        String name;
+        do{
+            System.out.printf("\t%s: ", input);
+            name = SCANNER.nextLine().strip();
+
+        if (name.isBlank()){
+            System.out.printf("\n%s can't be empty",input);
+            System.out.printf(ERROR_MSG, "Name can't be empty");
+            break;
+        } else if (!AtoZatozSpaceValidityCheck(name, ERROR_MSG)) {  //check ok -> true
+            System.out.printf("\n%s is invalid",input);
+        }else{valid=true;}
+
+        }while(!valid);
+        return name;
+    } //done
+
+    static boolean AtoZatozSpaceValidityCheck(String text, String ERROR_MSG) {
+        boolean valid=true;
+
+        for (int i = 0; i < text.length(); i++) { // check A-Z a-z spaces invalidity
+            if (!(Character.isLetter(text.charAt(i)) ||
+                    Character.isSpaceChar(text.charAt(i)))) {
+                System.out.printf(ERROR_MSG, "Invalid %s", text);
+                valid = false;
+                break;
+            }
+        }
+       return valid;
+    } //done
+
+    private static String generateAutoId(int size) {
+        // Generate auto ID & store in temp var.
+        String id = String.format("SDB-%05d", (size + 1));
+        System.out.print("\tID :"+id+ "\n");
+
+        return id;
+    } //done
+
+    public static double checkMin(double amountBoundary, String inputText, String ERROR_MSG){
             double amount ;
-            boolean validity = false;
+            boolean validity;
 
             do{
             System.out.printf(inputText);
@@ -213,10 +193,10 @@ public class Assignment2{
                 if (amount<amountBoundary){  
                     System.out.printf(ERROR_MSG+"\n");
                     validity=true;
-                }
+                }else{validity=false;}
                
             }while(validity) ;  
             
             return amount;
-        }
+        }//done
     }
